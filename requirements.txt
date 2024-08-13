@@ -9,3 +9,6 @@ fastparquet
 boto3
 numpy==1.22.4
 lightgbm
+prefect
+prefect-aws
+pydantic==1.10.16
