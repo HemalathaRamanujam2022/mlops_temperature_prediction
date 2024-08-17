@@ -11,8 +11,12 @@ from sklearn.ensemble import (
 from sklearn.linear_model import Lasso, LinearRegression
 from sklearn.svm import LinearSVR
 from xgboost import Booster
+from lightgbm import LGBMRegressor
 
 def build_hyperparamater_space(model_class, random_state):
+
+    params = {}
+    choices = {}
 
     if LinearSVR is model_class:
         params = dict(
@@ -58,9 +62,8 @@ def build_hyperparamater_space(model_class, random_state):
         )
 
     if LinearRegression is model_class:
-        # choices['fit_intercept'] = [True, False]
-        params = {}
-
+        choices['fit_intercept'] = [True, False]
+        
     if Booster is model_class:
         params = dict(
             # Controls the fraction of features (columns) that will be randomly sampled for each tree.
@@ -85,4 +88,22 @@ def build_hyperparamater_space(model_class, random_state):
             subsample=hp.uniform('subsample', 0.1, 1.0),
         )
 
-    return params
+    if LGBMRegressor is model_class:
+        params = {
+            'n_estimators': scope.int(hp.quniform('n_estimators', 100, 2000, 1)),
+            'max_depth': scope.int(hp.quniform('max_depth', 4, 100, 1)),
+            'learning_rate': hp.loguniform('learning_rate', -3, 0),
+            'reg_alpha': hp.loguniform('reg_alpha', -5, -1),
+            'reg_lambda': hp.loguniform('reg_lambda', -6, -1),
+            'min_child_weight': hp.loguniform('min_child_weight', -1, 3),
+            'subsample':        hp.uniform('subsample', 0.6, 1),
+            'objective': 'regression',
+            "first_metric_only": True,
+            "seed": 42,
+        }
+
+
+    for key, value in choices.items():
+        params[key] = hp.choice(key, value)
+
+    return params, choices

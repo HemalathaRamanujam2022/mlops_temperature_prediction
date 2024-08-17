@@ -3,6 +3,7 @@ from typing import Callable, Dict, Optional, Tuple, Union
 import pandas as pd
 import pickle
 from pathlib import Path
+import os
 
 
 import mlflow
@@ -17,6 +18,7 @@ import sklearn
 from sklearn.base import BaseEstimator
 from pandas import Series
 from scipy.sparse._csr import csr_matrix
+import scipy.sparse as sp
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.linear_model import LinearRegression
@@ -24,17 +26,20 @@ from sklearn.linear_model import Lasso
 from sklearn.linear_model import Ridge
 import xgboost as xgb
 from sklearn.ensemble import GradientBoostingRegressor
-import lightgbm as lgb
+import lightgbm
+from lightgbm import LGBMRegressor
 from sklearn.metrics import mean_squared_error
+from sklearn.pipeline import Pipeline
 
 from prefect import flow, task, get_run_logger
-
+from prefect_aws import S3Bucket, AwsCredentials
 import hp_space
 # from hp_space import build_hyperparamater_space 
 
 from functools import partial
 from hyperopt import fmin, tpe, hp, STATUS_OK, Trials
 from hyperopt.pyll import scope
+
 
 import importlib
 
@@ -44,8 +49,13 @@ weather_features = ['month', 'max_temp', 'min_temp', 'global_radiation', 'sunshi
 weather_target = "mean_temp"
 input_file = "data/london_weather.csv"
 random_state = 42
-max_evaluations = 1
+max_evaluations = 20
 early_stopping_rounds = 1
+
+HYPERPARAMETERS_WITH_CHOICE_INDEX = [
+    'fit_intercept',
+]
+
 
 @task(name="Load Data", log_prints=True, retries=3, retry_delay_seconds=2)
 def load_data(path):
@@ -88,13 +98,17 @@ def objective(params, X_train, X_val, model, y_train, y_val, dv):
 
         mlflow.log_param("model", model)
 
+        mlflow.set_tag("model", model.__name__)
+ 
         model = model(**params) 
 
         print("Before fit : ")
         print("X_train : ", X_train.shape)
         print("X_val : ", X_val.shape)
-        print("y_train : ", y_train.shape)
-        print("y_val : ", y_val.shape)
+        print("y_train : ", y_train.shape, type(y_train))
+        print("y_val : ", y_val.shape, type(y_val))
+        print("y_train : ", y_train[0:3])
+        print("y_val : ", y_train[0:3])
 
         model.fit(X_train, y_train)
         
@@ -103,9 +117,9 @@ def objective(params, X_train, X_val, model, y_train, y_val, dv):
         y_pred = model.predict(X_val)
         rmse = mean_squared_error(y_val, y_pred, squared=False)
 
-        model_name_rmse = "rmse_" + type(model).__name__
+        # model_name_rmse = "rmse_" + type(model).__name__
 
-        mlflow.log_metric(model_name_rmse , rmse)
+        mlflow.log_metric("rmse" , rmse)
         mlflow.sklearn.log_model(model, artifact_path="models_mlflow")
         Path("models").mkdir(parents=True, exist_ok=True)
         with open('models/preprocessor.b', 'wb') as f_out:
@@ -147,18 +161,23 @@ def load_class(module_and_class_name: str) -> BaseEstimator:
         linear_model.Lasso
         linear_model.LinearRegression
         svm.LinearSVR
+        lightbgm.LGBMRegressor
     """
     parts = module_and_class_name.split('.')
-    cls = "sklearn"
-    # print("parts : ", parts)
-    # for part in parts:
-        # cls = getattr(cls, part)
 
-    module_submodule = cls + "." + parts[0]
-    print("module_submodule : ", module_submodule)
+    if len(parts) > 1:
+        cls = "sklearn"
+        # print("parts : ", parts)
+        # for part in parts:
+            # cls = getattr(cls, part)
 
-    my_module = importlib.import_module(module_submodule)
-    cls = getattr(my_module, parts[1])    
+        module_submodule = cls + "." + parts[0]
+        print("module_submodule : ", module_submodule)
+
+        my_module = importlib.import_module(module_submodule)
+        cls = getattr(my_module, parts[1])    
+    else:
+        cls = getattr(lightgbm, "LGBMRegressor") 
 
     print("The model class is : ", cls)
     return cls
@@ -179,7 +198,8 @@ def tune_hyperparameters(
     print("Inside tune_hyperparameters() function")
     print("model_class : ", model_class)
 
-    search_space = hp_space.build_hyperparamater_space(model_class, random_state)
+    search_space, choices = hp_space.build_hyperparamater_space(model_class, random_state)
+  
 
     print("search_space : ", search_space)
 
@@ -191,6 +211,12 @@ def tune_hyperparameters(
         max_evals=max_evaluations,
         trials=Trials()
     )
+
+    # Convert choice index to choice value.
+    for key in HYPERPARAMETERS_WITH_CHOICE_INDEX:
+        if key in best_result and key in choices:
+            idx = int(best_result[key])
+            best_result[key] = choices[key][idx]
 
     print("The best result for model {model_class} is :, best_result")
 
@@ -221,10 +247,12 @@ def vectorize_features(
     X_val = scaler.transform(X_val) 
 
     print("Vectorize features : ")
-    print("X_train : ", X_train.shape)
-    print("X_val : ", X_val.shape)
-    print("y_train : ", y_train.shape)
-    print("y_val : ", y_val.shape)
+    print("X_train : ", X_train.shape, type(X_train))
+    print("X_val : ", X_val.shape, type(X_val))
+    print("y_train : ", y_train.shape, type(y_train))
+    print("y_val : ", y_val.shape, type(y_val))
+    print("y_train : ", y_train[0:3])
+    print("y_val : ", y_val[0:3])
 
     return X_train, X_val, y_train, y_val, dv
 
@@ -235,6 +263,8 @@ def train_models(
     y_train: Series,
     y_val: Series,
     dv:DictVectorizer,  
+    models_list: Series,
+    max_evaluations: int
     ):
     """
     Train Model
@@ -248,7 +278,15 @@ def train_models(
     logger.info("Starting Linear Regression training process...")
     
 
-    for mdl_name in ['linear_model.Lasso']:
+    for mdl_name in models_list:
+                    # [ 
+                    #   'ensemble.GradientBoostingRegressor',
+                    #   'ensemble.RandomForestRegressor',
+                    #   'linear_model.Lasso',
+                    #   'linear_model.LinearRegression',
+                    #   'svm.LinearSVR',
+                    #   'LGBMRegressor'
+                    # ]:
         model_class = load_class(mdl_name)
         model_instance = model_class()
         print("The loaded model class is : ", type(model_class))
@@ -269,70 +307,110 @@ def train_models(
     return None
 
 
-# @task(name="Get Best Model", log_prints=True)
-# def get_best_model(client, EXPERIMENT_NAME):
-#     logger = get_run_logger()
-#     logger.info("Get the model with the highest test accuracy...")
+@task(name="Get Best Model", log_prints=True)
+def get_best_model(client, EXPERIMENT_NAME):
+    logger = get_run_logger()
+    logger.info("Get the model with the highest test accuracy...")
 
-#     experiment = client.get_experiment_by_name(EXPERIMENT_NAME)
-#     best_run = client.search_runs(
-#         experiment_ids=experiment.experiment_id,
-#         run_view_type=ViewType.ACTIVE_ONLY,
-#         max_results=1,
-#         order_by=["metrics.test_accuracy DESC"])[0]
-#     best_run_id = best_run.info.run_id
+    experiment = client.get_experiment_by_name(EXPERIMENT_NAME)
+    best_run = client.search_runs(
+        experiment_ids=experiment.experiment_id,
+        run_view_type=ViewType.ACTIVE_ONLY,
+        max_results=1,
+        order_by=["metrics.rmse ASC"])[0]
+    print("best_run : ", best_run)
+    best_run_id = best_run.info.run_id
 
-#     best_run_tags = best_run.data.tags
-#     tag_key = 'model'
-#     tag_value = best_run_tags.get(tag_key)
-
-#     return best_run_id, tag_value
-
-# @task(name="Re-train best model on all training data", log_prints=True)
-# def train_all_data(S3_BUCKET_NAME, RUN_ID, X, y, tag_value):
-#     logger = get_run_logger()
-#     logger.info("Re-train best model on all data...")
-
-#     logged_model = f's3://{S3_BUCKET_NAME}/1/{RUN_ID}/artifacts/model'
-#     model = mlflow.sklearn.load_model(logged_model)
-
-#     with mlflow.start_run() as run:
-        
-#         #Train the model
-#         model.fit(X, y)
-
-#         # Log the model
-#         logger.info("Logging the model...")
-
-#         mlflow.set_tag("model", tag_value)
-#         mlflow.sklearn.log_model(model, "model")
-
-#         logger.info("Completed training process...")
-
-#         register_run_id = run.info.run_id
-
-#         return register_run_id
-
-# @task(name="Register Best Model", log_prints=True)
-# def register_best_model(client, register_run_id, model_name, tag_value):
-
-#     logger = get_run_logger()
-#     logger.info(f"Register the best model which has run_id: {register_run_id}...")
-
-#     result = mlflow.register_model(
-#         model_uri=f"runs:/{register_run_id}/models",
-#         name=model_name)
+    best_run_tags = best_run.data.tags
+    print("best_run_tags : ", best_run_tags)
+    tag_key = 'model'
+    tag_value = best_run_tags.get(tag_key)
     
-#     # Add a description to the model version
-#     description = f'{tag_value} model retrained with all training data.'
-#     client.update_model_version(
-#         name=result.name,
-#         version=result.version,
-#         description=description
-#     )
-#     logger.info(f"Model registered: {result.name}, version {result.version}...")
+    return best_run_id, tag_value
 
-#     return None
+@task(name="Re-train best model on all training data", log_prints=True)
+def train_all_data(RUN_ID, X, y, tag_value):
+    logger = get_run_logger()
+    logger.info("Re-train best model on all data...")
+
+    logged_model = f'runs:/{RUN_ID}/models_mlflow'
+    model = mlflow.sklearn.load_model(logged_model)
+
+    with mlflow.start_run() as run:
+               
+        mlflow.set_tag("developer", "hema")
+
+        mlflow.log_param("input_file", "data/london_weather.csv")
+     
+        #Train the model
+        # model.fit(X, y)
+
+        # Log the model
+        logger.info("Logging the model...")
+
+        mlflow.set_tag("model", tag_value)
+ 
+        mlflow.sklearn.log_model(model, "model")
+
+        logger.info("Completed training process...")
+
+        register_run_id = run.info.run_id
+
+        return register_run_id
+
+@task(name="Register Best Model", log_prints=True)
+def register_best_model(client, register_run_id, model_name, tag_value):
+
+    logger = get_run_logger()
+    logger.info(f"Register the best model which has run_id: {register_run_id}...")
+
+    result = mlflow.register_model(
+        model_uri=f"runs:/{register_run_id}/models",
+        name=model_name)
+    
+    # Add a description to the model version
+    description = f'{tag_value} model retrained with all training data.'
+    client.update_model_version(
+        name=result.name,
+        version=result.version,
+        description=description
+    )
+
+    model_version = result.version
+    new_stage = "Production"
+    client.transition_model_version_stage(
+        name=model_name,
+        version=model_version,
+        stage=new_stage,
+        archive_existing_versions=False
+    )
+
+    logger.info(f"Model registered: {result.name}, version {result.version}...")
+
+    return None
+
+@task(name="Register Best Model", log_prints=True)
+def export_model_to_s3_buckets(client, register_run_id):
+
+    registered_run = client.get_run(
+        run_id = register_run_id)
+    print("registered_run : ", registered_run)
+
+    artifact_uri = mlflow.get_run(register_run_id).info.artifact_uri
+    print("artifact_uri : ", artifact_uri)
+
+  
+    # Load the model and the input file
+    mlflow_model = artifact_uri
+
+    experiment_id = mlflow.get_run(register_run_id).info.experiment_id
+
+    local_folder = f"../../mlartifacts/{experiment_id}/{register_run_id}/artifacts"
+    s3_folder = f"mlartifacts/{experiment_id}/{register_run_id}/artifacts"
+
+    s3_bucket_block = S3Bucket.load("s3-bucket-block")
+    s3_bucket_block.upload_from_folder(from_folder= local_folder, 
+     to_folder=s3_folder)
 
 @flow(name="Temperature Prediction Training Pipeline", log_prints=True)
 def main_flow():
@@ -364,18 +442,53 @@ def main_flow():
     # Vectorize the features
     X_train, X_val, y_train, y_val, dv = vectorize_features(df_train, df_val)
 
-    # Train the various models
-    train_models(X_train, X_val, y_train, y_val, dv)
+    # # # Train the various models
+    # models_list = [
+    #                   'ensemble.GradientBoostingRegressor',
+    #                   'ensemble.RandomForestRegressor',
+    #                   'linear_model.Lasso',
+    #                   'linear_model.LinearRegression',
+    #                   'svm.LinearSVR',
+    #                   'LGBMRegressor'
+    #               ]
+    # train_models(X_train, X_val, y_train, y_val, dv, models_list, max_evaluations=20)
 
     # # Get best model
     # best_run_id, tag_value = get_best_model(client, EXPERIMENT_NAME)
 
-    # # Re-train best model on all data
-    # register_run_id = train_all_data(S3_BUCKET_NAME, best_run_id, X_train, y_train, tag_value)
+ 
 
-    # # Register best model
-    # model_name = "Cyberbullying-classification"
+    # print("best_run_id : ", best_run_id)
+    # print("tag_value : ", tag_value)
+    # print("Selected model : ", [model for model in models_list if tag_value in model])
+
+    # # Now run the best model by increasing max_evaluations to get a lower RMSE
+    # best_model = [model for model in models_list if tag_value in model]
+    # train_models(X_train, X_val, y_train, y_val, dv, best_model, max_evaluations=50)
+
+    # # Get best model
+    # best_run_id, tag_value = get_best_model(client, EXPERIMENT_NAME)
+
+ 
+
+    # print("best_run_id : ", best_run_id)
+    # print("tag_value : ", tag_value)
+    # print("Selected model : ", [model for model in models_list if tag_value in model])
+
+    # # # # Re-train best model on all data
+    # # X_combined = np.r_[X_train, X_val]
+    # # y_combined = np.r_[y_train, y_val]
+    # X_combined = sp.vstack((X_train,X_val))
+    # y_combined = pd.concat([y_train,y_val])
+    # register_run_id = train_all_data(best_run_id, X_combined, y_combined, tag_value)
+    # print("register_run_id : ", register_run_id)
+
+    # # # Register best model
+    # model_name = "London-Temperature-Prediction"
     # register_best_model(client, register_run_id, model_name, tag_value)
+
+    # register_run_id = 'eca05e2b66b64d3fa1d927eff863216d'
+    # export_model_to_s3_buckets(client, register_run_id)
 
     return None
 
