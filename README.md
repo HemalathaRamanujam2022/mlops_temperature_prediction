@@ -1,5 +1,5 @@
 ## <ins>Temperature prediction in London</ins>
-This is an end to end project to implement a machine learning operation pipeline that predicts the mean temperature in London on a given date based on important weather parameters gathered by European Climate Assessment & Dataset project. This project is implemented using MLflow, Prefect, Jupyter Notebook, Flask, Evidently and Grafana. Amazon S3 is used as an artifact repository. 
+This is an end to end project to implement a machine learning operations pipeline that predicts the mean temperature in London on a given date based on important weather parameters gathered by European Climate Assessment & Dataset project. This project is implemented using MLflow, Prefect, Jupyter Notebook, Flask, Evidently and Grafana. Amazon S3 is used as an artifact repository. 
 
 ## Description 
 ### Problem
