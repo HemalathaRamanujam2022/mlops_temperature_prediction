@@ -17,9 +17,9 @@ lightgbm = "*"
 pydantic = "==1.10.16"
 prefect = "*"
 prefect-aws = "*"
+ipykernel = "*"
 
 [dev-packages]
-ipykernel = "*"
 requests = "*"
 
 [requires]
