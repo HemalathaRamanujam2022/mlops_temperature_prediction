@@ -12,28 +12,18 @@ This project creates a machine learning (ML) operations pipeline that will use t
 ### Dataset
 The data for this project is downloaded from [Kaggle](https://www.kaggle.com/datasets/emmanuelfwerr/london-weather-data) . The dataset is created by “European Climate Assessment & Dataset project” and has around 15K records for the time period from 1979 to 2021. The data is captured daily. The data card on the above link can be obtained from the above link.
 
-### Tools and Technologies
+### Tools and Technologies Used
 
 Cloud – [Amazon Web Services](aws.amazon.com)
-
 Virtual machine – [Amazon EC2](ec2.amazon.com)
-
 Containerization – [Docker and Docker Compose](https://www.docker.com/)
-
 Orchestration – [Prefect](https://www.prefect.io/)
-
 Experiment tracking and ML model management – [Mlflow](https://mlflow.org/)
-
 Model artifacts storage – [Amazon S3](https://aws.amazon.com/s3/)
-
 Model deployment – [Flask](https://flask.palletsprojects.com/en/3.0.x/)
-
 Model monitoring – [Evidently AI](https://www.evidentlyai.com/)
-
 Model metrics visualisation - [Grafana](https://grafana.com/) 
-
 Language – [Python](https://www.python.org/)
-
 Notebooks – [Jupyter](https://jupyter.org/)
 
 
