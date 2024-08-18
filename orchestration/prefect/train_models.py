@@ -85,7 +85,9 @@ def preprocess_data(df):
     [df[col].fillna(df[col].mean(), inplace=True) for col in numeric_features]
     return df
 
-def objective(params, X_train, X_val, model, y_train, y_val, dv):
+def objective(params, X_train, X_val, model, y_train, y_val
+            #   , dv
+              ):
 
     print("params passed to objective function : ", params)
 
@@ -102,28 +104,34 @@ def objective(params, X_train, X_val, model, y_train, y_val, dv):
  
         model = model(**params) 
 
-        print("Before fit : ")
-        print("X_train : ", X_train.shape)
-        print("X_val : ", X_val.shape)
-        print("y_train : ", y_train.shape, type(y_train))
-        print("y_val : ", y_val.shape, type(y_val))
-        print("y_train : ", y_train[0:3])
-        print("y_val : ", y_train[0:3])
+        # print("y_train : ", y_train.shape, type(y_train))
+        # print("y_val : ", y_val.shape, type(y_val))
+        # print("y_train : ", y_train[0:3])
+        # print("y_val : ", y_train[0:3])
 
-        model.fit(X_train, y_train)
-        
-        print("After fit : ")
-
-        y_pred = model.predict(X_val)
+        # Create Pipeline
+        pipeline = Pipeline(
+            [
+                ('vectorizer', DictVectorizer()),
+                ('regressor', model),
+            ]
+        )
+      
+        # Train the model
+        pipeline.fit(X_train, y_train)
+        # model.fit(X_train, y_train)
+  
+        y_pred = pipeline.predict(X_val)
         rmse = mean_squared_error(y_val, y_pred, squared=False)
 
         # model_name_rmse = "rmse_" + type(model).__name__
 
         mlflow.log_metric("rmse" , rmse)
-        mlflow.sklearn.log_model(model, artifact_path="models_mlflow")
+        # mlflow.sklearn.log_model(model, artifact_path="models_mlflow")
+        mlflow.sklearn.log_model(pipeline, artifact_path="models_mlflow")
         Path("models").mkdir(parents=True, exist_ok=True)
-        with open('models/preprocessor.b', 'wb') as f_out:
-            pickle.dump((dv, model), f_out)
+        # with open('models/preprocessor.b', 'wb') as f_out:
+        #     pickle.dump((dv, model), f_out)
         mlflow.log_artifact(local_path="models/preprocessor.b", artifact_path="preprocessor")
 
         return {'loss': rmse, 'status': STATUS_OK}
@@ -167,45 +175,42 @@ def load_class(module_and_class_name: str) -> BaseEstimator:
 
     if len(parts) > 1:
         cls = "sklearn"
-        # print("parts : ", parts)
-        # for part in parts:
-            # cls = getattr(cls, part)
-
         module_submodule = cls + "." + parts[0]
-        print("module_submodule : ", module_submodule)
+        # print("module_submodule : ", module_submodule)
 
         my_module = importlib.import_module(module_submodule)
         cls = getattr(my_module, parts[1])    
     else:
         cls = getattr(lightgbm, "LGBMRegressor") 
 
-    print("The model class is : ", cls)
+    # print("The model class is : ", cls)
     return cls
 
 @task(name="Tune Hyperparameters", log_prints=True)
 def tune_hyperparameters(
-                        X_train: csr_matrix,
+                        # X_train: csr_matrix,
+                        X_train: Dict,
                         y_train: Series,
                         model_class: BaseEstimator,
-                        X_val: csr_matrix,
+                        # X_val: csr_matrix,
+                        X_val: Dict,
                         y_val: Series,
-                        dv:DictVectorizer,
+                        # dv:DictVectorizer,
                         # hyperparameters: Optional[Dict] = None,
                         max_evaluations: int = max_evaluations,
                         random_state: int = random_state,
                         ):
-    
-    print("Inside tune_hyperparameters() function")
-    print("model_class : ", model_class)
+    # print("model_class : ", model_class)
 
     search_space, choices = hp_space.build_hyperparamater_space(model_class, random_state)
-  
-
-    print("search_space : ", search_space)
+    # print("search_space : ", search_space)
 
     best_result = fmin(
         fn=partial(objective, X_train=X_train,X_val=X_val, model=model_class,
-                   y_train=y_train,y_val=y_val,dv=dv),
+                   y_train=y_train,y_val=y_val,
+                #    dv=dv
+                   )
+                   ,
         space=search_space,
         algo=tpe.suggest,
         max_evals=max_evaluations,
@@ -221,6 +226,20 @@ def tune_hyperparameters(
     print("The best result for model {model_class} is :, best_result")
 
     return best_result
+
+@task(name="Vectorize Features", log_prints=True)
+def prepare_dictionaries(
+    df_train: pd.DataFrame, df_val: pd.DataFrame
+) -> tuple ( [ Dict, Dict, pd.DataFrame, pd.DataFrame, Series, Series ] ):
+    
+    # Split the data
+    X_train, X_val, y_train, y_val = train_test_split(df_train, df_val, test_size=0.33, random_state=random_state)
+
+    dict_train = X_train.to_dict(orient='records')
+    dict_val = X_val.to_dict(orient='records')
+
+    return dict_train, dict_val, X_train, X_val, y_train, y_val
+        
 
 @task(name="Vectorize Features", log_prints=True)
 def vectorize_features(
@@ -245,24 +264,17 @@ def vectorize_features(
     scaler = StandardScaler(with_mean=False)
     X_train = scaler.fit_transform(X_train)
     X_val = scaler.transform(X_val) 
-
-    print("Vectorize features : ")
-    print("X_train : ", X_train.shape, type(X_train))
-    print("X_val : ", X_val.shape, type(X_val))
-    print("y_train : ", y_train.shape, type(y_train))
-    print("y_val : ", y_val.shape, type(y_val))
-    print("y_train : ", y_train[0:3])
-    print("y_val : ", y_val[0:3])
-
     return X_train, X_val, y_train, y_val, dv
 
 @task(name="Train Models", log_prints=True)
 def train_models(
-    X_train: csr_matrix,
-    X_val: csr_matrix,
+    # X_train: csr_matrix,
+    # X_val: csr_matrix,
+    X_train: Dict,
+    X_val: Dict,
     y_train: Series,
     y_val: Series,
-    dv:DictVectorizer,  
+    # dv:DictVectorizer,  
     models_list: Series,
     max_evaluations: int
     ):
@@ -289,8 +301,8 @@ def train_models(
                     # ]:
         model_class = load_class(mdl_name)
         model_instance = model_class()
-        print("The loaded model class is : ", type(model_class))
-        print(" ", type(model_instance), model_instance)
+        # print("The loaded model class is : ", type(model_class))
+        # print(" ", type(model_instance), model_instance)
 
         result = tune_hyperparameters(
                             X_train=X_train,
@@ -298,7 +310,7 @@ def train_models(
                             model_class = model_class,
                             X_val=X_val,
                             y_val=y_val,
-                            dv=dv,
+                            # dv=dv,
                             max_evaluations=max_evaluations,
                             random_state=random_state,
                     )
@@ -318,11 +330,11 @@ def get_best_model(client, EXPERIMENT_NAME):
         run_view_type=ViewType.ACTIVE_ONLY,
         max_results=1,
         order_by=["metrics.rmse ASC"])[0]
-    print("best_run : ", best_run)
+    # print("best_run : ", best_run)
     best_run_id = best_run.info.run_id
 
     best_run_tags = best_run.data.tags
-    print("best_run_tags : ", best_run_tags)
+    # print("best_run_tags : ", best_run_tags)
     tag_key = 'model'
     tag_value = best_run_tags.get(tag_key)
     
@@ -336,22 +348,24 @@ def train_all_data(RUN_ID, X, y, tag_value):
     logged_model = f'runs:/{RUN_ID}/models_mlflow'
     model = mlflow.sklearn.load_model(logged_model)
 
+    dict_X = X.to_dict(orient='records')
+
     with mlflow.start_run() as run:
                
         mlflow.set_tag("developer", "hema")
 
         mlflow.log_param("input_file", "data/london_weather.csv")
-     
-        #Train the model
-        # model.fit(X, y)
+
+        # Train the model
+        model.fit(dict_X, y)
 
         # Log the model
         logger.info("Logging the model...")
 
         mlflow.set_tag("model", tag_value)
  
-        mlflow.sklearn.log_model(model, "model")
-
+        mlflow.sklearn.log_model(model, "models_mlflow")
+       
         logger.info("Completed training process...")
 
         register_run_id = run.info.run_id
@@ -397,15 +411,14 @@ def export_model_to_s3_buckets(client, register_run_id):
     print("registered_run : ", registered_run)
 
     artifact_uri = mlflow.get_run(register_run_id).info.artifact_uri
-    print("artifact_uri : ", artifact_uri)
+    # print("artifact_uri : ", artifact_uri)
 
-  
     # Load the model and the input file
     mlflow_model = artifact_uri
 
     experiment_id = mlflow.get_run(register_run_id).info.experiment_id
 
-    local_folder = f"../../mlartifacts/{experiment_id}/{register_run_id}/artifacts"
+    local_folder = f"mlartifacts/{experiment_id}/{register_run_id}/artifacts"
     s3_folder = f"mlartifacts/{experiment_id}/{register_run_id}/artifacts"
 
     s3_bucket_block = S3Bucket.load("s3-bucket-block")
@@ -432,63 +445,61 @@ def main_flow():
 
     # Load the data
     df = load_data(input_file)
-    print(df.head())
+    # print(df.head())
 
     # Clean the text
     df_train, df_val = prepare_data(df)
-    print(df_train[0:2])
-    print(df_val[0:2])
+    # print(df_train[0:2])
+    # print(df_val[0:2])
 
     # Vectorize the features
-    X_train, X_val, y_train, y_val, dv = vectorize_features(df_train, df_val)
+    # X_train, X_val, y_train, y_val, dv = vectorize_features(df_train, df_val)
+    
+    # Prepare the feature dictionaries to be passed to the model pipeline
+    dict_train, dict_val, X_train, X_val, y_train, y_val = prepare_dictionaries(df_train, df_val)
 
-    # # # Train the various models
-    # models_list = [
-    #                   'ensemble.GradientBoostingRegressor',
-    #                   'ensemble.RandomForestRegressor',
-    #                   'linear_model.Lasso',
-    #                   'linear_model.LinearRegression',
-    #                   'svm.LinearSVR',
-    #                   'LGBMRegressor'
-    #               ]
-    # train_models(X_train, X_val, y_train, y_val, dv, models_list, max_evaluations=20)
+    # # Train the various models
+    models_list = [
+                      'ensemble.GradientBoostingRegressor',
+                      'ensemble.RandomForestRegressor',
+                      'linear_model.Lasso',
+                      'linear_model.LinearRegression',
+                      'svm.LinearSVR',
+                      'LGBMRegressor'
+                  ]
+    # train_models(X_train, X_val, y_train, y_val, dv, models_list, max_evaluations=1)
+    train_models(dict_train, dict_val, y_train, y_val, models_list, max_evaluations=20)
 
-    # # Get best model
-    # best_run_id, tag_value = get_best_model(client, EXPERIMENT_NAME)
-
- 
-
+    # Get best model
+    best_run_id, tag_value = get_best_model(client, EXPERIMENT_NAME)
     # print("best_run_id : ", best_run_id)
     # print("tag_value : ", tag_value)
     # print("Selected model : ", [model for model in models_list if tag_value in model])
 
-    # # Now run the best model by increasing max_evaluations to get a lower RMSE
-    # best_model = [model for model in models_list if tag_value in model]
-    # train_models(X_train, X_val, y_train, y_val, dv, best_model, max_evaluations=50)
+    # Now run the best model by increasing max_evaluations to get a lower RMSE
+    best_model = [model for model in models_list if tag_value in model]
+    train_models(dict_train, dict_val, y_train, y_val, best_model, max_evaluations=50)
 
-    # # Get best model
-    # best_run_id, tag_value = get_best_model(client, EXPERIMENT_NAME)
-
- 
-
-    # print("best_run_id : ", best_run_id)
+    Get best model
+    best_run_id, tag_value = get_best_model(client, EXPERIMENT_NAME)
+    print("best_run_id : ", best_run_id)
     # print("tag_value : ", tag_value)
     # print("Selected model : ", [model for model in models_list if tag_value in model])
 
-    # # # # Re-train best model on all data
-    # # X_combined = np.r_[X_train, X_val]
-    # # y_combined = np.r_[y_train, y_val]
+    # Re-train best model on all data
     # X_combined = sp.vstack((X_train,X_val))
-    # y_combined = pd.concat([y_train,y_val])
-    # register_run_id = train_all_data(best_run_id, X_combined, y_combined, tag_value)
-    # print("register_run_id : ", register_run_id)
+    X_combined = pd.concat((X_train,X_val))
+    y_combined = pd.concat([y_train,y_val])
+    print("X_combined : ", X_combined.shape, df_train.shape, df_val.shape)
+    print("y_combined : ", y_combined.shape, y_train.shape, y_val.shape)
+    register_run_id = train_all_data(best_run_id, X_combined, y_combined, tag_value)
+    print("register_run_id : ", register_run_id)
 
-    # # # Register best model
-    # model_name = "London-Temperature-Prediction"
-    # register_best_model(client, register_run_id, model_name, tag_value)
+    # # Register best model
+    model_name = "London-Temperature-Prediction"
+    register_best_model(client, register_run_id, model_name, tag_value)
 
-    # register_run_id = 'eca05e2b66b64d3fa1d927eff863216d'
-    # export_model_to_s3_buckets(client, register_run_id)
+    export_model_to_s3_buckets(client, register_run_id)
 
     return None
 
