@@ -1,8 +1,8 @@
-### Temperature prediction in London
+#### Temperature prediction in London
 This project is used to predict the mean temperature in London on a given date based on important weather parameters gathered by European Climate Assessment & Dataset project.
 
-Problem
-The mean temperature at a location has a close connection to climate change and has a wide-ranging impact on the environment, society and global economies. The global mean temperatures have been steadily increasing during green house gases. Human kind is increasingly exposed to extreme weather events like heatwaves, hurricanes and flooding. The rising sea levels can lead to habitat loss. Elevated temperatures worsen air quality therefore posing a serious health hazard to vulnerable populations. Increased temperatures have a profound effect on agricultural productivity and can lead to water scarcity stressing out the water resources.
-This project aims at creating models that can predict the mean temperature accurately so that proactive measures can be undertaken to maintain balance in environment, agriculture, energy management and health and safety areas.
-Objective
+### Problem
+The mean temperature at a location has a close connection to climate change and has a wide-ranging impact on the environment, society and global economies. The global mean temperatures have been steadily increasing during green house gases. Human kind is increasingly exposed to extreme weather events like heatwaves, hurricanes and flooding. The rising sea levels can lead to habitat loss. Elevated temperatures worsen air quality therefore posing a serious health hazard to vulnerable populations. Increased temperatures have a profound effect on agricultural productivity and can lead to water scarcity stressing out the water resources.This project aims at creating models that can predict the mean temperature accurately so that proactive measures can be undertaken to maintain balance in environment, agriculture, energy management and health and safety areas.
+
+### Objective
 The objective of the project is to create a machine learning (ML) operations pipeline that will use the weather data to predict mean temperature in London. Several ML models will be run on this data and the experiment will be tracked using MLflow and best model logged into MLflow Registry. The best model’s artifacts will be stored on AWS S3 and accessed inside a Flask application as a web service  to make the mean temperature predictions. The entire pipeline of data preparation, feature engineering, model training, hyper parameter tuning and model tracking and storage will be orchestrated using Prefect. For monitoring the performance of the model on new weather data, Evidently AI and Grafana tools are used.
