@@ -8,5 +8,9 @@ The mean temperature at a location has a close connection to climate change and 
 This project creates a machine learning (ML) operations pipeline that will use the weather data to predict mean temperature in London. Several ML models will be run on this data and the experiment will be tracked using MLflow and best model logged into MLflow Registry. The best model’s artifacts will be stored on AWS S3 and accessed inside a Flask application as a web service to make the mean temperature predictions. The entire pipeline from data preparation, feature engineering, model training, hyper parameter tuning to model tracking and storage will be orchestrated using Prefect. For monitoring the performance of the model on new weather data, Evidently AI and Grafana tools are used.
 
 ### Dataset
-The data for this project is downloaded from Kaggle (https://www.kaggle.com/datasets/emmanuelfwerr/london-weather-data) . The dataset is created by “European Climate Assessment & Dataset project” and has around 15K records for the time period from 1979 to 2021. The data is captured daily.
+The data for this project is downloaded from Kaggle <https://www.kaggle.com/datasets/emmanuelfwerr/london-weather-data> . The dataset is created by “European Climate Assessment & Dataset project” and has around 15K records for the time period from 1979 to 2021. The data is captured daily.
 
+
+Source URL : <https://smoosavi.org/datasets/us_accidents> 
+
+<https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents>
