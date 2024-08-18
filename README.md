@@ -35,8 +35,10 @@ In this step, the downloaded temperature dataset was analyzed for missing values
 In this step, the temperature data was modeled using several ML techniques. LazyPredict Python package was used to run all available regression models on the data and the top regressors with the best RMSE and runtime were further evaluated in the Prefect orchestration pipeline. The outputs are captured in the following modeling [notebook](model-training/predict_mean_temp.ipynb).
 
 ### Experiment Tracking
-In this step, MLflow was used to run the data against the selected models from the modeling phase and Hyperopt Python package was used to derive the best hyperparameters for these models. The experiements were logged into MLflow and the best model from among the several experiments was registered in the MLflow model regsitry. The outputs are captured in the following modeling notebooks [Tracking](experiment-tracking/track_experiments.ipynb) and [Model registry](experiment-tracking/register-model.ipynb). MLflow UI can be invoked by issuing the following command from the experiment_tracking folder.
+In this step, MLflow was used to run the data against the selected models from the modeling phase and Hyperopt Python package was used to derive the best hyperparameters for these models. The experiements were logged into MLflow and the best model from among the several experiments run, was registered in the MLflow model regsitry. The outputs are captured in the following modeling notebooks [Tracking](experiment-tracking/track_experiments.ipynb) and [Model registry](experiment-tracking/register-model.ipynb). MLflow UI can be invoked by issuing the following command from the experiment_tracking folder.
 
 ```
 mlflow ui --backend-store-uri sqlite:///mlflow.db
 ```
+
+
