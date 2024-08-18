@@ -15,23 +15,15 @@ The data for this project is downloaded from [Kaggle](https://www.kaggle.com/dat
 ### Tools and Technologies Used
 
 Cloud – [Amazon Web Services](aws.amazon.com)  
-Virtual machine – [Amazon EC2](ec2.amazon.com)
-
-Containerization – [Docker and Docker Compose](https://www.docker.com/)
-
-Orchestration – [Prefect](https://www.prefect.io/)
-
-Experiment tracking and ML model management – [Mlflow](https://mlflow.org/)
-
-Model artifacts storage – [Amazon S3](https://aws.amazon.com/s3/)
-
-Model deployment – [Flask](https://flask.palletsprojects.com/en/3.0.x/)
-
-Model monitoring – [Evidently AI](https://www.evidentlyai.com/)
-
-Model metrics visualisation - [Grafana](https://grafana.com/) 
-
-Language – [Python](https://www.python.org/)
-Notebooks – [Jupyter](https://jupyter.org/)
+Virtual machine – [Amazon EC2](ec2.amazon.com)  
+Containerization – [Docker and Docker Compose](https://www.docker.com/)  
+Orchestration – [Prefect](https://www.prefect.io/)  
+Experiment tracking and ML model management – [Mlflow](https://mlflow.org/)  
+Model artifacts storage – [Amazon S3](https://aws.amazon.com/s3/)  
+Model deployment – [Flask](https://flask.palletsprojects.com/en/3.0.x/)  
+Model monitoring – [Evidently AI](https://www.evidentlyai.com/)  
+Model metrics visualisation - [Grafana](https://grafana.com/)  
+Language – [Python](https://www.python.org/)  
+Notebooks – [Jupyter](https://jupyter.org/)  
 
 
