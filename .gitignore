@@ -14,6 +14,8 @@ venv
 **/models/
 **/mlruns/
 
+**/mage/
+
 __pycache__/
 **.env
 **.terraform/
