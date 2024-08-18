@@ -480,7 +480,7 @@ def main_flow():
     best_model = [model for model in models_list if tag_value in model]
     train_models(dict_train, dict_val, y_train, y_val, best_model, max_evaluations=50)
 
-    Get best model
+    # Get best model
     best_run_id, tag_value = get_best_model(client, EXPERIMENT_NAME)
     print("best_run_id : ", best_run_id)
     # print("tag_value : ", tag_value)
