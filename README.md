@@ -1,4 +1,4 @@
-#### Temperature prediction in London
+## Temperature prediction in London
 This project is used to predict the mean temperature in London on a given date based on important weather parameters gathered by European Climate Assessment & Dataset project.
 
 ### Problem
