@@ -44,5 +44,5 @@ mlflow ui --backend-store-uri sqlite:///mlflow.db
 ![Model Registry](images/Experiment_Tracking_MLflow_Registry.png)
 
 ### Training Pipeline
-Prefect is used to run the an end to end pipeline that includes data preparation, feature engineering, model training, hyperparameter selection , model tracking and registry and export of artifacts to Amazon S3.
+Prefect is used to run the an end to end pipeline that includes data preparation, feature engineering, model training, hyperparameter selection , model tracking and registry and export of artifacts to Amazon S3. Once teh pipeline runs, the flows and the corresponding flow runs can be monitored using the Prefect UI. Below are the successful screnshots of running the pipeline.
 
