@@ -64,22 +64,12 @@ def prepare_features(weather_data):
 
 
 def predict(features):
-
-    s3 = boto3.setup_default_session(region_name=aws_region)
-    s3 = boto3.session.Session().client("s3", 
-                                        aws_access_key_id = aws_access_key,
-                                        aws_secret_access_key = aws_secret_access_key,)
-
-    try:
-        logged_model = f's3://mlops-temperature-prediction/mlartifacts/1/{RUN_ID}/artifacts/models_mlflow'
-        # logged_model = f'runs:/{RUN_ID}/model'
-        print("logged_model : ", logged_model)
-        model = mlflow.pyfunc.load_model(logged_model)
-
-        preds = model.predict(features)
-        return float(preds[0])
-    except ClientError:
-        print("Credentials are NOT valid.")
+    logged_model = f's3://mlops-temperature-prediction/mlartifacts/1/{RUN_ID}/artifacts/models_mlflow'
+    print("logged_model : ", logged_model)
+    model = mlflow.pyfunc.load_model(logged_model)
+    print("model : ", model)
+    preds = model.predict(features)
+    return float(preds[0])
 
 
 app = Flask('temperature-prediction')
@@ -89,7 +79,7 @@ app = Flask('temperature-prediction')
 def predict_endpoint():
    
     weather_data = request.get_json()
-    verify_credentials()
+    # verify_credentials()
     features_matrix = prepare_features(weather_data)
     print(features_matrix)
     pred = predict(features_matrix)
