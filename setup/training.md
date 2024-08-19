@@ -40,7 +40,7 @@ Option 2: Trigger Prefect flow
 
 Change directory to main folder
 ```
-cd ~/mlops_temperature_predictionm
+cd ~/mlops_temperature_prediction
 ```
 
 Start the prefect worker
