@@ -1,4 +1,4 @@
-# data/
+**/data/
 .ipynb_checkpoints
 .bin
 *.db
@@ -13,6 +13,7 @@ venv
 **/artifacts/
 **/models/
 **/mlruns/
+**/workspace/
 
 **/mage/
 
