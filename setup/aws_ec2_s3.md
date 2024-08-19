@@ -36,7 +36,7 @@ Host mlops-zoomcamp
     StrictHostKeyChecking no
 ```
 
-Once you are setup, you can simply SSH into the servers using the below commands in separate terminals. Do not forget to change the IP address of VM restarts.
+Once you are setup, you can simply SSH into the servers using the below commands in separate terminals. Do not forget to change the IP address if VM restarts.
 
 ```
 ssh mlops-zoomcamp
