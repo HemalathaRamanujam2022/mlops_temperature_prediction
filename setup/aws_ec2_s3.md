@@ -3,7 +3,7 @@
 
 Create an AWS account with your email. This email should be kept carefully and should not be used for AWS services for any project.
 
-Using the adminstrator account, create an [IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) and an [IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html) with AdministratorAccess and AmazonS3FullAccess permissions. This user acts as the admin for the project and will be used to create the infrastructure. However when the infrastructure is created each service will have its own IAM role with the least required permissions.
+Using the administrator account, create an [IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) and an [IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html) with AdministratorAccess and AmazonS3FullAccess permissions. This user acts as the admin for the project and will be used to create the infrastructure. However when the infrastructure is created each service will have its own IAM role with the least required permissions.
 
 Log in to AWS by using IAM user account created as above.
 
