@@ -79,7 +79,7 @@ Here we run the model on new set of weather data (from 2021 onwards). Weather da
 ## Steps to run the project
 
 ### Prequisities
-This project was run locally using a 4GM RAM WSL2 OS on Windows laptop. The project can also be run on AWS EC2 machine with an appropriate configuration. Refer [here](setup/linux_vm.md) for more instructions on how to setup the AWS EC2 machine required to run this project. Use this link to also learn on how to create an AWS account and IAM users and roles.
+This project was run locally using a 4GM RAM Ubuntu 2004 OS on wsl2 for Windows laptop. The project can also be run on AWS EC2 machine with an appropriate configuration. Refer [here](setup/linux_vm.md) for more instructions on how to setup the AWS EC2 machine required to run this project. Use this link to also learn on how to create an AWS account and IAM users and roles.
 
 Once the machine is ready, follow the steps in order.
 
