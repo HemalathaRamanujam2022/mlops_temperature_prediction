@@ -36,4 +36,12 @@ Host mlops-zoomcamp
     StrictHostKeyChecking no
 ```
 
+Once you are setup, you can simply SSH into the servers using the below commands in separate terminals. Do not forget to change the IP address of VM restarts.
+
+```
+ssh mlops-zoomcamp
+```
+
+You will have to forward ports from your VM to your local machine for you to be able to see Mage UI. Check how to do that here
+
 
