@@ -41,6 +41,7 @@ In this step, MLflow was used to run the data against the selected models from t
 mlflow ui --backend-store-uri sqlite:///mlflow.db
 ```
 ![Model Tracking](images/Experiment_Tracking_MLflow_Dashboard.png)  
+
 ![Model Registry](images/Experiment_Tracking_MLflow_Registry.png)
 
 ### Training Pipeline
@@ -54,8 +55,16 @@ Prefect is used to run an end to end pipeline that includes data preparation, fe
 After the training pipeline is run, we will deploy the model as a web service using flask application run within a Docker container. gunicorn is used as the server for running the Flask application on the production server. The LGBM regressor model artifacts are extracted from Amazon S3 bucket and the new json record with weather features are fed to the web service to get the predicted mean temperature. The outputs are as shown below.
 
 ![Flask Application Running](images/Deployment_Flask_Service.png)
+
+
 ![Predicted Output](images/Deployment_Predicted_Output.png)
 
 ### Monitoring
 
-Here we run the model on new set of weather data (from 2021 onwards). Weather data for the years 2021 - 2023 were extracted from the ECA website and merged together and used as the current data. The validation dataset from the original dataset is used as the reference data. Metrics are calculated for both reference and current data and plotted using Evidently and Grafana. The [notebook](eda/extract_new_data.ipynb) is used to generate the new current data from the raw data files stored in [raws_data](data/raw_data). The [new datasets](data)  and the reference [validation dataset](monitoring/data) can be found in the respective folders.
+Here we run the model on new set of weather data (from 2021 onwards). Weather data for the years 2021 - 2023 were extracted from the ECA website and merged together and used as the current data. The validation dataset from the original dataset is used as the reference data. Metrics are calculated for both reference and current data and plotted using Evidently and Grafana. The [notebook](eda/extract_new_data.ipynb) is used to generate the new current data from the raw data files stored in [raw_data](data/raw_data). The [new datasets](data)  and the reference [validation dataset](monitoring/data) can be found in the respective folders.
+
+![Evidently Dashboard](images/Evidently_Dashboard.png)
+
+![Evidently Reports](images/Evidently_Reports.png)
+
+![Grafana Dashbiard](images/Grafana_Metrics_Dashboard.png)
