@@ -39,6 +39,6 @@ http://localhost:3000
 
 The dashboard will look like the following. The dashboard provides metrics such as r2_Score, rmse, mean absolute error and absolute error max.
 
-![Grafana](images/Grafana_Metrics_Dashboard.png)
+![Grafana](../images/Grafana_Metrics_Dashboard.png)
 
 
