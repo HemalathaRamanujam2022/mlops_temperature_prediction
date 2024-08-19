@@ -80,7 +80,7 @@ This project was run locally using a 4GM RAM WSL2 OS on Windows laptop. The proj
 Once the machine is ready, follow the steps in order.
 
 - [EDA and Exeriment tracking](setup/eda_experiment_tracking.md)  
-- [Prefect and MLflow Training Pipe]ine](setup/training.md)
+- [Prefect and MLflow Training Pipeline](setup/training.md)
 - [Model Deployment]()  
 - [Model monitoring](setup/monitoring_evidently_grafana.md)
 
