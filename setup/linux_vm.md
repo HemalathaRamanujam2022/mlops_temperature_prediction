@@ -1,4 +1,4 @@
-Ensure you have the following tools on the Linux or Ubuntu OS installed locally or on Amazon EC2 instance.
+Ensure you have the following tools on the Linux or Ubuntu Operating System installed locally or on an Amazon EC2 instance.
 
 1. Install Docker if it is not available. For Docker, run the following commands.  
 ```
