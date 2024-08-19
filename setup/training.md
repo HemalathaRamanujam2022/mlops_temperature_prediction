@@ -9,6 +9,8 @@ DAG Flow -
 - The dict vectorizer and best model are bundled into a pipeline and registered in the MLflow registry. All trained model artifacts are stored in AWS S3, identified by their run_id.
 - The model deployed in Amazon S3 will be used in the deployment phase.
 
+The MLflow UI can be accessed on port 5000 and the Prefect UI can be accessed on port 4200 on the localhost.
+
 Change directory to training folder
 ```
 cd orchestration/prefect/
