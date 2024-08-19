@@ -30,6 +30,7 @@ Language – [Python](https://www.python.org/)
 Notebooks – [Jupyter](https://jupyter.org/)  
 
 ### Architecture Diagram  
+![Diagram](images/Architecture Diagram.png)
 
 ### Exploratory Data Analysis
 In this step, the downloaded temperature dataset was analyzed for missing values and outliers. Data distribution, Time series and Principal Component Analysis were done to understand the correlation between the various weather parameters. The charts were plotted using Matplotlib and Seaborn. The outputs are captured in the following EDA [notebook](eda/eda-temperature.ipynb).
