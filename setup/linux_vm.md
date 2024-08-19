@@ -20,7 +20,7 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-2. Install git if not available. An active GITHUB account is needed to clone the project repository.
+2. Install git if not available. An active GitHub account is needed to clone the project repository.
 ```
    sudo apt install -y git
 ```
