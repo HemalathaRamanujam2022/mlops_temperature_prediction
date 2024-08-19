@@ -24,3 +24,9 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 ```
    sudo apt install -y git
 ```
+
+3. Clone the projct repository from GitHub.
+   ```
+   git clone https://github.com/HemalathaRamanujam2022/mlops_temperature_prediction.git
+   cd mlops_temperature_prediction
+   ```
