@@ -17,7 +17,7 @@ evidently ui
 
 The evidently AI also stores the metrics in a Postgres DB which can  be visualised using Grafana reporting tool. The SQL inserts are orchestrated via a Prefect flow.
 
-New data will be imported amd the model will be run on this data. The original data used to build the validation set for the model will serve as the reference data and the recent data as the current data. If the quality checks and data drift are not within acceptable thresholds on the new data, the model will need to be tuned on the new data again.
+New data will be imported and the model will be run on this data. The original data used to build the validation set for the model will serve as the reference data and the recent data as the current data. If the quality checks and data drift are not within acceptable thresholds on the new data, the model will need to be tuned on the new data again.
 
 
 First, change directory to [monitoring folder](../monitoring)
