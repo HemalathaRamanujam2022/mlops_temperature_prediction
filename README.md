@@ -75,4 +75,13 @@ Here we run the model on new set of weather data (from 2021 onwards). Weather da
 ## Steps to run the project
 
 ### Prequisities
-This project was run locally using a 4GM RAM WSL2 on Windows laptop. The project can also be run on AWS EC2 machine with an appropriate configuration. Refer [here]() for more instructions on how to setup the machine required to run this project.
+This project was run locally using a 4GM RAM WSL2 OS on Windows laptop. The project can also be run on AWS EC2 machine with an appropriate configuration. Refer [here](setup/linux_vm.md) for more instructions on how to setup the AWS EC2 machine required to run this project. Use this link to also learn on how to create an AWS account and IAM users and roles.
+
+Once the machine is ready, follow the steps in order.
+
+- [EDA and Exeriment tracking](setup/eda_experiment_tracking.md)  
+- [Prefect and MLflow Training Pipe]ine](setup/training.md)
+- [Model Deployment]()  
+- [Model monitoring](setup/monitoring_evidently_grafana.md) 
+  
+- 
