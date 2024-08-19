@@ -88,10 +88,10 @@ Once the machine is ready, follow the steps in order.
 - [Model Deployment](setup/deployment_flask.md)  
 - [Model monitoring](setup/monitoring_evidently_grafana.md)
 
-## Further improvements
-Integration with Amazon Elastic Bean Stalk, EC2
-Automated infrastructure deployment using Terraform
-Unit and Integration tests
+## Further Improvements
+Integration with Amazon Elastic Bean Stalk, EC2  
+Automated infrastructure deployment using Terraform  
+Unit and Integration tests 
 Best practices (formatters, linters, pre-commit hooks, makefile, CI/CD pipeline)
   
 ### Acknowledgements
