@@ -42,6 +42,11 @@ Once you are setup, you can simply SSH into the servers using the below commands
 ssh mlops-zoomcamp
 ```
 
-You will have to forward ports from your VM to your local machine for you to be able to see Mage UI. Check how to do that here
+You will have to forward ports from your VM to your local machine for you to be able to see the respective tools UI locally. Check how to do that [here](https://www.youtube.com/watch?v=ae-CV2KfoN0&t=1074s).
 
+
+Configure the AWS CLI using the command [aws configure](https://docs.aws.amazon.com/cli/latest/reference/configure/). You'll need to provide the AWS_ACCESS_KEY and AWS_SECRET_ACCESS_KEY along with the AWS_REGION and AWS_OUTPUT_FORMAT (optional, usually json).
+AWS Access Key ID [None]: The access key id from IAM
+AWS Secret Access Key [None]: The secret access key from IAM
+default region name should be the similar format as: ap-south-1 
 
