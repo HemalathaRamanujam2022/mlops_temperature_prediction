@@ -55,9 +55,11 @@ prefect deploy training/train_models.py:main_flow -n temperature_prediction_flow
 Run the ML model training and model registration pipeline
 
 ```
-prefect deployment run 'Train Model Pipeline/emperature_prediction_flow'
+prefect deployment run 'Train Model Pipeline/temperature_prediction_flow'
 ```
 
 Below is the screenshot of the Prefect Deployment:
+
+
 
 
