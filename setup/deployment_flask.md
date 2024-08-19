@@ -2,6 +2,8 @@ We will be using Flask application from inside a Docker container to run the mod
 
 Note: The Docker container is currently having a bug with credentials error. This will be work in progress to fix the error. The working self-contained docker container can then easily be integrated into Amazon Elastic Beanstalk.
 
+Update the following environmental variables on the command line before running the delpoyed model.
+RUN_ID, AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY, AWS_REGION  
 
 However the web service can be interactively run to get the prediction on a json weather record by doing the following. 
 ```
