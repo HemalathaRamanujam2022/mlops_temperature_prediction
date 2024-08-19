@@ -35,7 +35,7 @@ In this step, the downloaded temperature dataset was analyzed for missing values
 In this step, the temperature data was modeled using several ML techniques. LazyPredict Python package was used to run all available regression models on the data and the top regressors with the best RMSE and runtime were further evaluated in the Prefect orchestration pipeline. The outputs are captured in the following modeling [notebook](model-training/predict_mean_temp.ipynb).
 
 ### Experiment Tracking
-In this step, MLflow was used to run the data against the selected models from the modeling phase and Hyperopt Python package was used to derive the best hyperparameters for these models. The experiements were logged into MLflow and the best model from among the several experiments run, was registered in the MLflow model regsitry. The outputs are captured in the following modeling notebooks [Tracking](experiment-tracking/track_experiments.ipynb) and [Model registry](experiment-tracking/register-model.ipynb). MLflow UI can be invoked by issuing the following command from the experiment_tracking folder.
+In this step, MLflow was used to run the data against the selected models from the modeling phase and Hyperopt Python package was used to derive the best hyperparameters for these models. The experiements were logged into MLflow and the best model from among the several experiments run, was registered in the MLflow model registry. The outputs are captured in the following modeling notebooks [Tracking](experiment-tracking/track_experiments.ipynb) and [Model registry](experiment-tracking/register-model.ipynb). MLflow UI can be invoked by issuing the following command from the experiment_tracking folder.
 
 ```
 mlflow ui --backend-store-uri sqlite:///mlflow.db
@@ -44,5 +44,18 @@ mlflow ui --backend-store-uri sqlite:///mlflow.db
 ![Model Registry](images/Experiment_Tracking_MLflow_Registry.png)
 
 ### Training Pipeline
-Prefect is used to run the an end to end pipeline that includes data preparation, feature engineering, model training, hyperparameter selection , model tracking and registry and export of artifacts to Amazon S3. Once teh pipeline runs, the flows and the corresponding flow runs can be monitored using the Prefect UI. Below are the successful screnshots of running the pipeline.
+Prefect is used to run an end to end pipeline that includes data preparation, feature engineering, model training, hyperparameter selection , model tracking and model registry and export of artifacts to Amazon S3. Once the pipeline runs, the flows and the corresponding flow runs can be monitored using the Prefect UI. Below are the successful screnshots of running the pipeline.
 
+!{Training Flow](images/Prefect_Flows_Traning_Pipeline.png)
+![Training Flow Runs](images/Prefect_FlowRuns_Completed.png)
+
+
+### Deployment
+After the training pipeline is run, we will deploy the model as a web service using flask application run within a Docker container. gunicorn is used as the server for running the Flask application on the production server. The LGBM regressor model artifacts are extracted from Amazon S3 bucket and the new json record with weather features are fed to the web service to get the predicted mean temperature. The outputs are as shown below.
+
+![Flask Application Running](images/Deployment_Flask_Service.png)
+![Predicted Output](images/Deployment_Predicted_Output.png)
+
+### Monitoring
+
+Here we run the model on new set of weather data (from 2021 onwards). Weather data for the years 2021 - 2023 were extracted from the ECA website and merged together and used as the current data. The validation dataset from the original dataset is used as the reference data. Metrics are calculated for both reference and current data and plotted using Evidently and Grafana. The [notebook](eda/extract_new_data.ipynb) is used to generate the new current data from the raw data files stored in [raws_data](data/raw_data). The [new datasets](data)  and the reference [validation dataset](monitoring/data) can be found in the respective folders.
