@@ -91,7 +91,7 @@ Once the machine is ready, follow the steps in order.
 ## Further Improvements
 Integration with Amazon Elastic Bean Stalk, EC2  
 Automated infrastructure deployment using Terraform  
-Unit and Integration tests 
+Unit and Integration tests  
 Best practices (formatters, linters, pre-commit hooks, makefile, CI/CD pipeline)
   
 ### Acknowledgements
