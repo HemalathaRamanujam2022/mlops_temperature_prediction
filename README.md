@@ -1,4 +1,7 @@
-## <ins>Temperature prediction in London</ins>
+## <ins>Temperature prediction in London</ins>  
+
+![photo](images/London_Thames.jpg)
+
 This is an end to end project to implement a machine learning operations pipeline that predicts the mean temperature in London on a given date based on important weather parameters gathered by European Climate Assessment & Dataset project. This project is implemented using MLflow, Prefect, Amazon Web Services (EC2, S3, IAM), Docker, Jupyter Notebook, Flask, Docker, Evidently and Grafana. 
 
 ## Description 
