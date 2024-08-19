@@ -60,9 +60,11 @@ prefect deployment run 'Train Model Pipeline/temperature_prediction_flow'
 
 Below is the screenshot of the Prefect Deployment:
 
-!(../images/Prefect_FlowRuns_Completed.png)  
-!(../images/Prefect_Flows_Traning_Pipeline.png)  
-!(../images/MLflow_Artifacts.png)  
+![pic1](../images/Prefect_FlowRuns_Completed.png)  
+![pic2](../images/Prefect_Flows_Traning_Pipeline.png)  
+![pic3](../images/MLflow_Artifacts.png)  
+![pic4](images/AWS_S3_Artifacts0.png)
+![pic5](images/AWS_S3_Artifacts.png)
 
 
 
