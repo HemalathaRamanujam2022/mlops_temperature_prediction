@@ -70,3 +70,9 @@ Here we run the model on new set of weather data (from 2021 onwards). Weather da
 ![Evidently Reports](images/Evidently_Reports.png)  
 
 ![Grafana Dashbiard](images/Grafana_Metrics_Dashboard.png)  
+
+
+## Steps to run the project
+
+### Prequisities
+This project was run locally using a 4GM RAM WSL2 on Windows laptop. The project can also be run on AWS EC2 machine with an appropriate configuration. Refer [here]() for more instructions on how to setup the machine required to run this project.
