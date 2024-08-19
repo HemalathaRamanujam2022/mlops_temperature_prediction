@@ -1,7 +1,7 @@
 
 ### AWS Account Setup (Free tier account)
 
-Create an AWS account with your email. This email should be keop carefully and should not be used for general AWS services for any project.
+Create an AWS account with your email. This email should be kept carefully and should not be used for general AWS services for any project.
 
 Using the adminstrator account, create an [IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) and an [IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html) with AdministratorAccess and AmazonS3FullAccess permissions. This user acts as the admin for the project and will be used to create the infrastructure. However when the infrastructure is created each service will have its own IAM role with the least required permissions.
 
