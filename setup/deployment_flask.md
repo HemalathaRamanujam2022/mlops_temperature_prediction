@@ -16,5 +16,9 @@ On another terminal, start a web service request to get the prediction.
 python test.py
 ```
 The outputs are as below.
-![run1](../images/Deployment_Flask_Service.png)
-![run2](../images/Deployment_Predicted_Output.png)
+![run1](../images/Deployment_Flask_Service.png)  
+
+
+![run2](../images/Deployment_Predicted_Output.png)  
+
+
