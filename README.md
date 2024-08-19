@@ -82,6 +82,16 @@ Once the machine is ready, follow the steps in order.
 - [EDA and Exeriment tracking](setup/eda_experiment_tracking.md)  
 - [Prefect and MLflow Training Pipe]ine](setup/training.md)
 - [Model Deployment]()  
-- [Model monitoring](setup/monitoring_evidently_grafana.md) 
+- [Model monitoring](setup/monitoring_evidently_grafana.md)
+
+## Further improvements
+Integration with Awazon Elastic Bean Stalk, EC2, Terraform
+Unit and Integration tests
+Best practices (formatters, linters, pre-commit hooks, makefile, CI/CD pipeline)
   
-- 
+### Acknowledgements
+Dataset - ECA&D forms the backbone of the climate data node in the Regional Climate Centre (RCC) for WMO Region VI (Europe and the Middle East) since 2010. The data and information products contribute to the Global Framework for Climate Services (GFCS).
+
+Instructor credits -- The amazing team of https://datatalks.club/ led by Alexey Grigorev.
+
+I thank them for their thoughtful compilation and delivery of this course to inspire and educate on leading tools and techniques that are critical for evaluation and management of ML models in realtime.
