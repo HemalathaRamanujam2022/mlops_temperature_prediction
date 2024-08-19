@@ -52,12 +52,10 @@ default region name should be the similar format as: ap-south-1
 
 Find below a few screenshots on how the IAM user and role has been created.
 
-[IAM User](../images/AWS_IAM_Users.png)  
-[IAM Role](images/AWS_IAM_Role.png)  
-[S3 Object Access](images/AWS_S3_Access.png)  
-[S3 Policy](images/AWS_IAM_Permissions.png)  
-
-https://github.com/HemalathaRamanujam2022/mlops_temperature_prediction/blob/main/images/AWS_IAM_Permissions.png?raw=true
+![IAM User](../images/AWS_IAM_Users.png)  
+![IAM Role](../images/AWS_IAM_Role.png)  
+![S3 Object Access](../images/AWS_S3_Access.png)  
+![S3 Policy](../images/AWS_IAM_Permissions.png)  
 
 
 
