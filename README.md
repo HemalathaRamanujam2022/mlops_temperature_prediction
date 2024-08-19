@@ -79,7 +79,7 @@ Here we run the model on new set of weather data (from 2021 onwards). Weather da
 ## Steps to run the project
 
 ### Prequisities
-This project was run locally using a 4GM RAM Ubuntu 2004 OS on wsl2 for Windows laptop. The project can also be run on AWS EC2 machine with an appropriate configuration. Refer [here](setup/linux_vm.md) for more instructions on how to setup the AWS EC2 machine required to run this project. Use this link to also learn on how to create an AWS account and IAM users and roles.
+This project was run locally using a 4GM RAM Ubuntu 20.04 OS on wsl2 for Windows laptop. The project can also be run on Amazon EC2 machine with an appropriate configuration. Refer [here](setup/linux_vm.md) for more instructions on how to setup the AWS EC2 machine required to run this project. Use this link to also learn on how to create an AWS free tier account and IAM users and roles.
 
 Once the machine is ready, follow the steps in order.
 
@@ -97,5 +97,5 @@ Best practices (formatters, linters, pre-commit hooks, makefile, CI/CD pipeline)
 ### Acknowledgements
 Dataset - ECA&D forms the backbone of the climate data node in the Regional Climate Centre (RCC) for WMO Region VI (Europe and the Middle East) since 2010. The data and information products contribute to the Global Framework for Climate Services (GFCS).
 
-Instructor credits -- The amazing team of https://datatalks.club/ led by Alexey Grigorev.
+Instructor credits -- The amazing team of [DataTalksClub](https://datatalks.club/) led by Alexey Grigorev.
 I thank them for their thoughtful compilation and delivery of this course to demonstrate the leading tools and methodologies that are critical for the evaluation and management of ML models in realtime.
