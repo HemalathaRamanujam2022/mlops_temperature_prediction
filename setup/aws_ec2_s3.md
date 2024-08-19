@@ -3,11 +3,11 @@
 
 Create an AWS account with your email. This email should be keop carefully and should not be used for general AWS services for any project.
 
-Using the adminstrator account, create an IAM user and an IAM role with AdministratorAccess and AmazonS3FullAccess permissions. This user acts as the admin for the project and will be used to create the infrastructure. However when the infrastructure is created each service will have its own IAM role with the least required permissions.
+Using the adminstrator account, create an [IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) and an [IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html) with AdministratorAccess and AmazonS3FullAccess permissions. This user acts as the admin for the project and will be used to create the infrastructure. However when the infrastructure is created each service will have its own IAM role with the least required permissions.
 
 Log in to AWS by using IAM user account created as above.
 
-Create an access key for the user. This will give you the AWS_ACCESS_KEY and AWS_SECRET_ACCESS_KEY which you'll need to configure the AWS CLI later. Access keys are secret, just like a password. Don’t share them.
+Create an [access key](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) for the user. This will give you the AWS_ACCESS_KEY and AWS_SECRET_ACCESS_KEY which you'll need to configure the [AWS CLI](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html) later. Access keys are secret, just like a password. Don’t share them.
 
 ### EC2 virtual machine setup 
 
