@@ -31,7 +31,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
    cd mlops_temperature_prediction
    ```
 
-4. Create a virtual environment for the project by running the following commands. The project was built and tested on python 3.9.19 .
+4. Create a virtual environment for the project by running the following commands. The project was built and tested on python 3.9.19 . The required dependencies are already setup in the Pipfile. Invoke the virtual environment as below.
    ```
    pipenv shell
    ```
