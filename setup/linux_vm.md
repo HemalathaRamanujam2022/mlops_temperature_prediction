@@ -30,3 +30,8 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
    git clone https://github.com/HemalathaRamanujam2022/mlops_temperature_prediction.git
    cd mlops_temperature_prediction
    ```
+
+4. Create a virtual environment for the project by running the following commands. The project was built and tested on python 3.9.19 .
+   ```
+   pipenv shell
+   ```
