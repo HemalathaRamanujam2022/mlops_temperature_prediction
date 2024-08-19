@@ -26,3 +26,14 @@ Create a config file in your .ssh folder
 ```
 code ~/.ssh/config
 ```
+
+Copy the following snippet and replace with External IP of the Virtual Machine. Username and path to the ssh private key
+```
+Host mlops-zoomcamp
+    HostName <ec2_public_ip>
+    User ubuntu
+    IdentityFile ~/.ssh/<key_pair_name>.pem
+    StrictHostKeyChecking no
+```
+
+
