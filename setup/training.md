@@ -28,25 +28,36 @@ prefect server start
 
 There are 2 options to run training pipeline.
 
-Option 1: Run the prefect flow below interactively (This is the option that I tested for).
+Option 1: Run the prefect flow below interactively from the folder [orchestration/prefect](../orchestration/prefect) (This is the option that I tested for). First create a prefect block to create a bucket in Amazon S3.
 ```
-python training.py
+python orchestration/prefect/create_s3_bucket_block.py
+python train_models.py
 ```
 
 Option 2: Trigger Prefect flow
 
 Change directory to main folder
+```
+cd ~/mlops_temperature_predictionm
+```
 
-cd ~/cyberbullying_detection
 Start the prefect worker
 
-prefect worker start --pool cyberbullying
-Deploy the pipeline
+```
+prefect worker start --pool temperature_prediction
+```
 
-prefect deploy training/training.py:main_flow -n cyberbullying_flow -p cyberbullying
+Deploy the pipeline
+```
+prefect deploy training/train_models.py:main_flow -n temperature_prediction_flow -p temperature_prediction
+```
+
 Run the ML model training and model registration pipeline
 
-prefect deployment run 'Train Model Pipeline/cyberbullying_flow'
+```
+prefect deployment run 'Train Model Pipeline/emperature_prediction_flow'
+```
+
 Below is the screenshot of the Prefect Deployment:
 
 
