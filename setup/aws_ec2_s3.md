@@ -46,9 +46,11 @@ You will have to forward ports from your VM to your local machine for you to be 
 
 
 Configure the AWS CLI using the command [aws configure](https://docs.aws.amazon.com/cli/latest/reference/configure/). You'll need to provide the AWS_ACCESS_KEY and AWS_SECRET_ACCESS_KEY along with the AWS_REGION and AWS_OUTPUT_FORMAT (optional, usually json).
+```
 AWS Access Key ID [None]: The access key id from IAM
 AWS Secret Access Key [None]: The secret access key from IAM
-default region name should be the similar format as: ap-south-1 
+default region name should be the similar format as: ap-south-1
+```
 
 Find below a few screenshots on how the IAM user and role has been created.
 
