@@ -1,6 +1,6 @@
 ### Model monitoring
 
-Evidently AI is a tool that is used to track the perfrmance metrics of a model over time. There are several metrics like Regression Presets, Data Quaity Drift, Data and Target drifts and Regression Performance metrics that are useful to track to monitor the performance of a model. Evindently AI can generate reprts and dashboards on these metrics which can be accessed using their UI. The Evidently and Grafana tools are run inside a docker container.
+Evidently AI is a tool that is used to track the perfrmance metrics of a model over time. There are several metrics like Regression Presets, Data Quality Drift, Data and Target drifts and Regression Performance metrics that are useful to track to monitor the performance of a model. Evidently AI can generate reprts and dashboards on these metrics which can be accessed using their UI. The Evidently and Grafana tools are run inside a docker container.
 
 To start the service, run the command
 ```
@@ -17,7 +17,7 @@ evidently ui
 
 The evidently AI also stores the metrics in a Postgres DB which can  be visualised using Grafana reporting tool. The SQL inserts are orchestrated via a Prefect flow.
 
-New data will be imported and the model will be run on this data. The original data used to build the validation set for the model will serve as the reference data and the recent data as the current data. If the quality checks and data drift are not within acceptable thresholds on the new data, the model will need to be tuned on the new data again.
+New data will be imported and the model will be run on this data. The original data used to build the validation set for the model will serve as the reference data and the recent data as the current data. If the quality checks and data drifts are not within acceptable thresholds on the new data, the model will need to be tuned and retrained on the new data again.
 
 
 First, change directory to [monitoring folder](../monitoring)
