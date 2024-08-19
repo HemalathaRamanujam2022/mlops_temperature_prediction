@@ -94,7 +94,7 @@ Automated infrastructure deployment using Terraform
 Unit and Integration tests  
 Best practices (formatters, linters, pre-commit hooks, makefile, CI/CD pipeline)
   
-### Acknowledgements
+## Acknowledgements
 Dataset - ECA&D forms the backbone of the climate data node in the Regional Climate Centre (RCC) for WMO Region VI (Europe and the Middle East) since 2010. The data and information products contribute to the Global Framework for Climate Services (GFCS).
 
 Instructor credits -- The amazing team of [DataTalksClub](https://datatalks.club/) led by Alexey Grigorev.
