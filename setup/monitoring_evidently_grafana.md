@@ -4,7 +4,7 @@ Evidently AI is a tool that is used to track the perfrmance metrics of a model o
 
 To start the service, run the command
 ```
-docker compose -up --build
+docker compose up --build
 ```
 Evidently UI can be accessed on port 8000 on the localhost using the command.
 
