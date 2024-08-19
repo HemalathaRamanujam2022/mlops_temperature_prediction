@@ -50,3 +50,7 @@ AWS Access Key ID [None]: The access key id from IAM
 AWS Secret Access Key [None]: The secret access key from IAM
 default region name should be the similar format as: ap-south-1 
 
+Find below a few screenshots on how the IAM user and role has been created.
+
+
+
